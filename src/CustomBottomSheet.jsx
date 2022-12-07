@@ -19,16 +19,20 @@ export const CustomBottomSheet = forwardRef(({
     const scrollToItem = () => {
         if (!selectedZone) return;
         if (zoneList.length < 1) return;
+        // find item index
         const index = zoneList.findIndex(value => value.id === selectedZone?.id);
+        // scroll to destination index
+        // it's better to set animated to true (experimental)
         flatListRef.current.scrollToIndex({
             animated: true,
-            index: index,
+            index: index, // 0
         })
         console.log('scrollToItem called by index:' + index)
     }
 
     const handleSnapPress = (index = 0) => {
         bottomSheetRef.current.snapToIndex(index);
+        // call this method after each time user opens the bottom sheet
         scrollToItem();
     }
 
@@ -63,6 +67,7 @@ export const CustomBottomSheet = forwardRef(({
         }
     )
 
+    // forwarding methods via ref
     useImperativeHandle(ref, () => ({
         open: handleSnapPress,
         close: handleClosePress,
@@ -90,6 +95,7 @@ export const CustomBottomSheet = forwardRef(({
                 </Text>
             </View>
             <BottomSheetFlatList
+                // add ref and getItemLayout in order to use scrollToIndex method
                 ref={flatListRef}
                 getItemLayout={getItemLayout}
                 data={zoneList}
